@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('social_platforms', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->unique(); // Twitter, Instagram, etc
             $table->timestamps();
         });
     }

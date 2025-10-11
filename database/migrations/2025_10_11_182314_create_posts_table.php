@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->string('title');
+            $table->text('body');
+            $table->foreignId('difficulty_id')->constrained('difficulties');
+            $table->enum('status', ['draft','published','private'])->default('draft');
+            $table->unsignedBigInteger('view_count')->default(0);
             $table->timestamps();
         });
     }
