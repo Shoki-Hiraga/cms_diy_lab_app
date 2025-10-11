@@ -16,6 +16,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             CategoriesTableSeeder::class,
             ToolsTableSeeder::class,
+            DifficultiesTableSeeder::class,
+            ReactionTypesTableSeeder::class,
         ]);
     }
 }

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('difficulties', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
+            $table->unsignedTinyInteger('level')->unique(); // 1〜5
             $table->timestamps();
         });
     }
