@@ -6,5 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Tool extends Model
 {
-    //
+    protected $fillable = ['name'];
+
+    public function posts()
+    {
+        return $this->belongsToMany(Post::class, 'post_tools');
+    }
 }

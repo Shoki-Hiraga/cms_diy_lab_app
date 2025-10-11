@@ -6,5 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Difficulty extends Model
 {
-    //
+    protected $fillable = ['name'];
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
 }
