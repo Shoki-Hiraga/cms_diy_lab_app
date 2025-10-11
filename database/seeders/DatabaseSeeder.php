@@ -18,6 +18,11 @@ class DatabaseSeeder extends Seeder
             ToolsTableSeeder::class,
             DifficultiesTableSeeder::class,
             ReactionTypesTableSeeder::class,
+
+            // TEST用ダミーデータ
+            TESTUsersTableSeeder::class,
+            TESTPostsTableSeeder::class,
+            TESTCommentsTableSeeder::class,
+            TESTReactionsTableSeeder::class,
         ]);
     }
-}
