@@ -2,54 +2,60 @@ import os
 import re
 import csv
 
-MIGRATIONS_DIR = "database/migrations"
-OUTPUT_FILE = "migrations_export.csv"
+MODELS_DIR = "app/Models"
+OUTPUT_FILE = "models_export.csv"
 
-# カラム定義を正規表現で抜き出す
-COLUMN_REGEX = re.compile(r"\$table->(\w+)\(['\"](\w+)['\"](.*)\);")
+# テーブル名
+TABLE_REGEX = re.compile(r"protected\s+\$table\s*=\s*['\"](\w+)['\"]")
+# プライマリキー
+PK_REGEX = re.compile(r"protected\s+\$primaryKey\s*=\s*['\"](\w+)['\"]")
+# fillable
+FILLABLE_REGEX = re.compile(r"protected\s+\$fillable\s*=\s*\[([^\]]*)\]", re.S)
+# guarded
+GUARDED_REGEX = re.compile(r"protected\s+\$guarded\s*=\s*\[([^\]]*)\]", re.S)
+# casts
+CASTS_REGEX = re.compile(r"protected\s+\$casts\s*=\s*\[([^\]]*)\]", re.S)
 
-def parse_migration(file_path):
+def extract_array(content):
+    # 'name', 'email' → ["name","email"]
+    items = re.findall(r"['\"](\w+)['\"]", content)
+    return items
+
+def parse_model(file_path):
     with open(file_path, "r", encoding="utf-8") as f:
         content = f.read()
 
-    # テーブル名
-    table_match = re.search(r"Schema::create\(['\"](\w+)['\"]", content)
-    if not table_match:
-        return None, []
+    model_name = os.path.basename(file_path).replace(".php", "")
 
-    table_name = table_match.group(1)
+    table = TABLE_REGEX.search(content)
+    pk = PK_REGEX.search(content)
+    fillable = FILLABLE_REGEX.search(content)
+    guarded = GUARDED_REGEX.search(content)
+    casts = CASTS_REGEX.search(content)
 
-    # カラム定義をすべて取得
-    columns = []
-    for match in COLUMN_REGEX.finditer(content):
-        col_type, col_name, options = match.groups()
-        columns.append({
-            "table": table_name,
-            "column": col_name,
-            "type": col_type,
-            "options": options.strip()
-        })
-
-    return table_name, columns
-
+    return {
+        "model": model_name,
+        "table": table.group(1) if table else "",
+        "primaryKey": pk.group(1) if pk else "id",
+        "fillable": ", ".join(extract_array(fillable.group(1))) if fillable else "",
+        "guarded": ", ".join(extract_array(guarded.group(1))) if guarded else "",
+        "casts": ", ".join(re.findall(r"['\"](\w+)['\"]\s*=>\s*['\"](\w+)['\"]", casts.group(1))) if casts else "",
+    }
 
 def main():
     rows = []
-    for filename in os.listdir(MIGRATIONS_DIR):
+    for filename in os.listdir(MODELS_DIR):
         if filename.endswith(".php"):
-            filepath = os.path.join(MIGRATIONS_DIR, filename)
-            table_name, cols = parse_migration(filepath)
-            if cols:
-                rows.extend(cols)
+            filepath = os.path.join(MODELS_DIR, filename)
+            rows.append(parse_model(filepath))
 
     # CSV出力
     with open(OUTPUT_FILE, "w", newline="", encoding="utf-8") as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=["table", "column", "type", "options"])
+        writer = csv.DictWriter(csvfile, fieldnames=["model", "table", "primaryKey", "fillable", "guarded", "casts"])
         writer.writeheader()
         writer.writerows(rows)
 
     print(f"✅ Exported to {OUTPUT_FILE}")
-
 
 if __name__ == "__main__":
     main()

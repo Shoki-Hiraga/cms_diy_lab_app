@@ -31,6 +31,7 @@ users,username,string,)->unique(
 users,email,string,)->unique(
 users,email_verified_at,timestamp,)->nullable(
 users,password,string,
+users,is_active,boolean,)->default(true
 users,email,string,)->primary(
 users,token,string,
 users,created_at,timestamp,)->nullable(
