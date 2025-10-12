@@ -1,15 +1,15 @@
-model,table,primaryKey,fillable,guarded,casts
-Category,,id,name,,
-Comment,,id,"post_id, user_id, parent_comment_id, body",,
-Difficulty,,id,name,,
-Follow,,id,"follower_id, followee_id",,
-Post,,id,"user_id, title, body, difficulty_id, status, view_count",,
-PostImage,,id,"post_id, image_path, order",,
-Reaction,,id,"user_id, post_id, reaction_type_id",,
-ReactionType,,id,name,,
-SocialPlatform,,id,name,,
-Tag,,id,name,,
-Tool,,id,name,,
-User,,id,"username, email, password, is_active",,
-UserProfile,,id,"user_id, profile, profile_image_url",,
-UserSocialLink,,id,"user_id, social_platforms_id, url",,
+model,table,primaryKey,fillable,guarded,casts,functions,relations
+Category,,id,name,,,posts,posts:belongsToMany
+Comment,,id,"post_id, user_id, parent_comment_id, body",,,"post, user, parent, replies","post:belongsTo, user:belongsTo, parent:belongsTo, replies:hasMany"
+Difficulty,,id,name,,,posts,posts:hasMany
+Follow,,id,"follower_id, followee_id",,,"follower, followee","follower:belongsTo, followee:belongsTo"
+Post,,id,"user_id, title, body, difficulty_id, status, view_count",,,"user, images, categories, tools, tags, difficulty, comments, reactions","user:belongsTo, images:hasMany, categories:belongsToMany, tools:belongsToMany, tags:belongsToMany, difficulty:belongsTo, comments:hasMany, reactions:hasMany"
+PostImage,,id,"post_id, image_path, order",,,post,post:belongsTo
+Reaction,,id,"user_id, post_id, reaction_type_id",,,"user, post, type","user:belongsTo, post:belongsTo, type:belongsTo"
+ReactionType,,id,name,,,reactions,reactions:hasMany
+SocialPlatform,,id,name,,,socialLinks,socialLinks:hasMany
+Tag,,id,name,,,posts,posts:belongsToMany
+Tool,,id,name,,,posts,posts:belongsToMany
+User,,id,"username, email, password, is_active",,,"profile, socialLinks, posts, comments, reactions, following, followers, scopeActive","profile:hasOne, socialLinks:hasMany, posts:hasMany, comments:hasMany, reactions:hasMany, following:belongsToMany, followers:belongsToMany"
+UserProfile,,id,"user_id, profile, profile_image_url",,,user,user:belongsTo
+UserSocialLink,,id,"user_id, social_platforms_id, url",,,"user, platform","user:belongsTo, platform:belongsTo"
