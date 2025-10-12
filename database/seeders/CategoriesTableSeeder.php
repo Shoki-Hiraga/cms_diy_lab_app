@@ -10,6 +10,7 @@ class CategoriesTableSeeder extends Seeder
     public function run(): void
     {
         $categories = [
+            '修理',
             'ガーデニング',
             '屋上・ベランダ',
             '庭づくり',
