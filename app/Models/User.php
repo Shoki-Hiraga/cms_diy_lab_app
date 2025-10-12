@@ -11,7 +11,7 @@ class User extends Authenticatable
     use HasApiTokens, Notifiable;
 
     protected $fillable = [
-        'username', 'email', 'password',
+        'username', 'email', 'password', 'is_active',
     ];
 
     protected $hidden = [
@@ -52,4 +52,10 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(User::class, 'follows', 'followee_id', 'follower_id');
     }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
 }
