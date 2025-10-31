@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             ReactionTypesTableSeeder::class,
 
             // TEST用ダミーデータ
+            TESTTagsTableSeeder::class,
             TESTUsersTableSeeder::class,
             TESTPostsTableSeeder::class,
             TESTCommentsTableSeeder::class,
