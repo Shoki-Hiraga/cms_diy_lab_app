@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             ToolsTableSeeder::class,
             DifficultiesTableSeeder::class,
             ReactionTypesTableSeeder::class,
+            SocialPlatformSeeder::class,
 
             // TEST用ダミーデータ
             TESTTagsTableSeeder::class,

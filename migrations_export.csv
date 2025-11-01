@@ -54,12 +54,15 @@ tags,name,string,)->unique(
 tools,name,string,)->unique(
 posts,user_id,foreignId,)->constrained()->cascadeOnDelete(
 posts,title,string,
-posts,body,text,
 posts,difficulty_id,foreignId,)->constrained('difficulties'
 posts,status,enum,", ['draft','published','private'])->default('draft'"
 posts,view_count,unsignedBigInteger,)->default(0
 post_categories,post_id,foreignId,)->constrained()->cascadeOnDelete(
 post_categories,category_id,foreignId,)->constrained()->cascadeOnDelete(
+post_contents,post_id,foreignId,)->constrained()->cascadeOnDelete(
+post_contents,image_path,string,)->nullable(
+post_contents,comment,text,)->nullable(
+post_contents,order,unsignedInteger,)->default(0
 post_images,post_id,foreignId,)->constrained()->cascadeOnDelete(
 post_images,image_path,string,
 post_images,order,integer,)->default(0
